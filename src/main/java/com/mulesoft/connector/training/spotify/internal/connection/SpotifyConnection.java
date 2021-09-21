@@ -28,6 +28,7 @@ public class SpotifyConnection {
     private static final String TOKEN_EXPIRED = "Token expired";
     private String token;
     private HttpClient httpClient;
+    private final Gson gson = new Gson();
 
     public SpotifyConnection(String token, HttpClient httpClient) {
         this.token = token;
@@ -81,7 +82,6 @@ public class SpotifyConnection {
     }
 
     private boolean isTokenExpiredMessage(HttpResponse httpResponse) {
-        final Gson gson = new Gson();
         final Type resultType = new TypeToken<Map<String, Object>>() {}.getType();
 
         final Map<String, Object> httpResponseBody = gson.fromJson(IOUtils.toString(httpResponse.getEntity().getContent()), resultType);

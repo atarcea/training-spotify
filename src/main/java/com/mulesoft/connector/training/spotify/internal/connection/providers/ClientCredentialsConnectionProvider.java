@@ -105,6 +105,8 @@ public class ClientCredentialsConnectionProvider implements CachedConnectionProv
 
     private static final String ACCESS_TOKEN = "access_token";
 
+    private final Gson gson = new Gson();
+
     @Override
     public SpotifyConnection connect() throws ConnectionException {
 
@@ -171,7 +173,6 @@ public class ClientCredentialsConnectionProvider implements CachedConnectionProv
 
     private Map<String, Object> getResponseBody(HttpResponse httpResponse ) {
         final Type resultType = new TypeToken<Map<String, Object>>() {}.getType();
-        final Gson gson = new Gson();
         return  gson.fromJson(IOUtils.toString(httpResponse.getEntity().getContent()), resultType);
     }
 }
