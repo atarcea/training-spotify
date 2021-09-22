@@ -11,6 +11,7 @@ import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
 import org.mule.runtime.api.lifecycle.Disposable;
 import org.mule.runtime.api.lifecycle.Initialisable;
+import org.mule.runtime.api.lifecycle.InitialisationException;
 import org.mule.runtime.api.tls.TlsContextFactory;
 import org.mule.runtime.core.api.util.Base64;
 import org.mule.runtime.core.api.util.IOUtils;
@@ -28,6 +29,7 @@ import org.mule.runtime.http.api.HttpHeaders;
 import org.mule.runtime.http.api.HttpService;
 import org.mule.runtime.http.api.client.HttpClient;
 import org.mule.runtime.http.api.client.HttpClientConfiguration;
+import org.mule.runtime.http.api.client.proxy.ProxyConfig;
 import org.mule.runtime.http.api.domain.entity.ByteArrayHttpEntity;
 import org.mule.runtime.http.api.domain.entity.HttpEntity;
 import org.mule.runtime.http.api.domain.message.request.HttpRequest;
@@ -41,6 +43,7 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import static org.mule.runtime.api.meta.ExpressionSupport.NOT_SUPPORTED;
+import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
 import static org.mule.runtime.extension.api.annotation.param.display.Placement.ADVANCED_TAB;
 import static org.mule.runtime.extension.api.annotation.param.display.Placement.DEFAULT_TAB;
 
@@ -156,10 +159,21 @@ public class ClientCredentialsConnectionProvider implements CachedConnectionProv
     }
 
     @Override
-    public void initialise()  {
+    public void initialise() throws InitialisationException {
         HttpClientConfiguration.Builder httpClientConfiguration = new HttpClientConfiguration.Builder()
                 .setName(configName);
-//        todo :proxy + TLS
+
+        // proxy + TLS
+        initialiseIfNeeded(tlsContextFactory);
+        httpClientConfiguration.setProxyConfig(java.util.Optional.ofNullable(proxyConfiguration)
+                        .map(proxy -> ProxyConfig.builder()
+                                .username(proxy.getUsername())
+                                .password(proxy.getPassword())
+                                .host(proxy.getHost())
+                                .port(proxy.getPort()).build())
+                        .orElse(null))
+                .setTlsContextFactory(tlsContextFactory);
+
         httpClient = httpService.getClientFactory().create(httpClientConfiguration.build());
         httpClient.start();
     }
