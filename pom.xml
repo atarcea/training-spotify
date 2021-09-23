@@ -11,7 +11,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mule4-training-spotify-connector</artifactId>
-    <version>1.0.0-Training-001</version>
+    <version>1.0.0-Training-004</version>
     <packaging>mule-extension</packaging>
     <name>Spotify Connector -Mule4</name>
 
@@ -22,6 +22,12 @@
         <odata.version>4.7.1</odata.version>
         <docker.maven.plugin.version>0.35.0</docker.maven.plugin.version>
         <runtimeProduct>MULE_EE</runtimeProduct>
+
+        <munit.input.directory>src/test/munit</munit.input.directory>
+        <munit.output.directory>${basedir}/target/test-mule/munit</munit.output.directory>
+        <munit.extensions.maven.plugin.version>1.0.0</munit.extensions.maven.plugin.version>
+        <munit.version>2.2.3</munit.version>
+        <mavenResourcesVersion>3.0.2</mavenResourcesVersion>
     </properties>
 
     <dependencies>
@@ -173,6 +179,57 @@
                 <configuration>
                     <rerunFailingTestsCount>5</rerunFailingTestsCount>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${mavenResourcesVersion}</version>
+                <executions>
+                    <execution>
+                        <id>copy-munit-resources</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${munit.output.directory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${munit.input.directory}</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.mulesoft.munit</groupId>
+                <artifactId>munit-extensions-maven-plugin</artifactId>
+                <version>${munit.extensions.maven.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <phase>integration-test</phase>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.mulesoft.munit</groupId>
+                        <artifactId>munit-runner</artifactId>
+                        <version>${munit.version}</version>
+                        <classifier>mule-plugin</classifier>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.mulesoft.munit</groupId>
+                        <artifactId>munit-tools</artifactId>
+                        <version>${munit.version}</version>
+                        <classifier>mule-plugin</classifier>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
 

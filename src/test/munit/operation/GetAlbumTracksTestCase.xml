@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:spotify="http://www.mulesoft.org/schema/mule/spotify" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+      xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+		http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/spotify http://www.mulesoft.org/schema/mule/spotify/current/mule-spotify.xsd">
+
+
+    <munit:config name="GetAlbumTracksTestCase.xml"/>
+
+    <munit:test name="validPayloadIsNotNull_ReturnsExpectedPayload" doc:id="40becca8-5b57-4458-95cc-8a9b1d190c34"
+                description="Validate not null payload">
+        <munit:execution>
+            <flow-ref doc:name="Flow-ref to getAlbumTracks-Flow" doc:id="815ca7af-c308-46fc-9cfe-3a613383f969"
+                      name="getAlbumTracks-Flow"/>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that doc:name="Assert that" doc:id="b15f4bbe-9a58-486a-9a3f-512bd1077e3c"
+                                     is="#[MunitTools::notNullValue()]" message="Null payload" expression="#[payload]"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="validResponseType_ReturnsExpectedResponseType" doc:id="40becca8-5b57-4458-95cc-8a9b1d190c34"
+                description="Validate response type">
+        <munit:execution>
+            <flow-ref doc:name="Flow-ref to getAlbumTracks-Flow" doc:id="815ca7af-c308-46fc-9cfe-3a613383f969"
+                      name="getAlbumTracks-Flow"/>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that doc:name="Assert that" doc:id="b15f4bbe-9a58-486a-9a3f-512bd1077e3c"
+                                     is="#[MunitTools::withMediaType(&quot;application/json&quot;)]"
+                                     message="Invalid response type" expression="#[payload]"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="validPayloadItemsSize_ReturnsExpectedPayloadSize" doc:id="40becca8-5b57-4458-95cc-8a9b1d190c34"
+                description="Validate payload items size">
+        <munit:execution>
+            <flow-ref doc:name="Flow-ref to getAlbumTracks-Flow" doc:id="815ca7af-c308-46fc-9cfe-3a613383f969"
+                      name="getAlbumTracks-Flow"/>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that doc:name="Assert that" doc:id="b15f4bbe-9a58-486a-9a3f-512bd1077e3c"
+                                     is="#[MunitTools::equalTo(6)]" message="Invalid payload "
+                                     expression="#[sizeOf(payload.items)]"/>
+        </munit:validation>
+    </munit:test>
+
+    <munit:test name="invalidAlbumId_ReturnsErrorPayload" doc:id="40becca8-5b57-4458-95cc-8a9b1d190c34"
+                description="Test error type response">
+        <munit:execution>
+            <flow-ref doc:name="Flow-ref to getAlbumTracks-invalidId-Flow" doc:id="815ca7af-c308-46fc-9cfe-3a613383f969"
+                      name="getAlbumTracks-invalidId-Flow"/>
+        </munit:execution>
+        <munit:validation>
+            <munit-tools:assert-that doc:name="Assert that" doc:id="b15f4bbe-9a58-486a-9a3f-512bd1077e3c"
+                                     is="#[MunitTools::notNullValue()]" message="Invalid payload "
+                                     expression="#[payload.error]"/>
+        </munit:validation>
+    </munit:test>
+
+</mule>

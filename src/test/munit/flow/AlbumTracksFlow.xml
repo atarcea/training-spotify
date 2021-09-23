@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:spotify="http://www.mulesoft.org/schema/mule/spotify" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+      xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+		http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+    http://www.mulesoft.org/schema/mule/spotify http://www.mulesoft.org/schema/mule/spotify/current/mule-spotify.xsd">
+
+    <flow name="getAlbumTracks-Flow" doc:id="944cbe12-5da8-4bb6-984f-8aee7529147a" >
+        <spotify:get-album-tracks doc:name="Get album tracks" config-ref="SimpleSpotifyConfig" albumId="${albumId}">
+            <spotify:advanced-query-params>
+                <spotify:advanced-query-param key="offset" value="2"/>
+                <spotify:advanced-query-param key="limit" value="6"/>
+            </spotify:advanced-query-params>
+        </spotify:get-album-tracks>
+    </flow>
+
+    <flow name="getAlbumTracks-invalidId-Flow" doc:id="944cbe12-5da8-4bb6-984f-8aee7529147a" >
+        <spotify:get-album-tracks doc:name="Get album tracks" config-ref="SimpleSpotifyConfig" albumId="test">
+            <spotify:advanced-query-params>
+                <spotify:advanced-query-param key="offset" value="2"/>
+                <spotify:advanced-query-param key="limit" value="6"/>
+            </spotify:advanced-query-params>
+        </spotify:get-album-tracks>
+    </flow>
+</mule>

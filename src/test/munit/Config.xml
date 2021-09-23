@@ -1,0 +1,41 @@
+<mule xmlns:spotify="http://www.mulesoft.org/schema/mule/spotify"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+      xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+      xmlns:file="http://www.mulesoft.org/schema/mule/file"
+      xmlns:os="http://www.mulesoft.org/schema/mule/os"
+      xsi:schemaLocation=
+              "http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+        http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/spotify http://www.mulesoft.org/schema/mule/spotify/current/mule-spotify.xsd
+        http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+
+
+    <configuration-properties file="automation.properties"/>
+
+    <!--    simple connection config-->
+    <spotify:spotify-config name="SimpleSpotifyConfig" doc:name="Spotify Config"
+                            doc:id="67871571-af62-4395-9753-cfb41d167660">
+        <spotify:oauth-client-credentials-connection
+                clientSecret="${client.credentials.provider.client.secret}"
+                clientId="${client.credentials.provider.client.id}"/>
+    </spotify:spotify-config>
+
+    <!--    simple connection config with invalid client id-->
+    <spotify:spotify-config name="SpotifyConfig-invalidClientId"
+                            doc:name="SpotifyConfig-invalidClientId"
+                            doc:id="67871571-af62-4395-9753-cfb41d167660">
+        <spotify:oauth-client-credentials-connection
+                clientSecret="${client.credentials.provider.client.secret}"
+                clientId="test"/>
+    </spotify:spotify-config>
+
+</mule>

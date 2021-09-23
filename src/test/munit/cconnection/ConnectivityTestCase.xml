@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:mtf="http://www.mulesoft.org/schema/mule/mtf"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+        http://www.mulesoft.org/schema/mule/mtf  http://www.mulesoft.org/schema/mule/mtf/current/mule-mtf.xsd">
+
+    <munit:config name="ConnectivityTestCase.xml" minMuleVersion="4.2.0"/>
+
+
+    <munit:test name="validSimpleConnectionTest">
+        <munit:execution>
+            <mtf:test-connectivity config-ref="SimpleSpotifyConfig"/>
+        </munit:execution>
+    </munit:test>
+
+    <munit:test name="SimpleConnectionTestWithInvalidClientId_Throws_SPOTIFY_INVALID_CONNECTION"
+                expectedErrorType="SPOTIFY:INVALID_CONNECTION"
+                expectedException="org.mule.runtime.api.exception.MuleRuntimeException">
+        <munit:execution>
+            <mtf:test-connectivity config-ref="SpotifyConfig-invalidClientId"/>
+        </munit:execution>
+    </munit:test>
+
+</mule>
