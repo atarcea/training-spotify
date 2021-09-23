@@ -59,6 +59,7 @@ public class GetAlbumTracksOperation {
 
         try {
             httpResponse = connection.getHttpClient().send(httpRequest, httpRequestOptions);
+            connection.handleResponse(httpResponse);
 
         } catch (TimeoutException e) {
             throw new ModuleException("Request timeout exceeded.", SpotifyErrorType.TIMEOUT);

@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mulesoft.connector.training.spotify.internal.error.SpotifyErrorType;
 import com.mulesoft.connector.training.spotify.internal.util.Constants;
 import org.apache.olingo.commons.api.format.ContentType;
+import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.core.api.util.StringUtils;
 import org.mule.runtime.extension.api.exception.ModuleException;
@@ -63,9 +64,16 @@ public class SpotifyConnection {
         }
     }
 
-    private boolean isTokenExpired(HttpResponse httpResponse) {
+    public HttpResponse handleResponse(HttpResponse response) {
+         if (isTokenExpired(response)){
+             throw new ModuleException(TOKEN_EXPIRED, SpotifyErrorType.INVALID_CONNECTION, new ConnectionException(TOKEN_EXPIRED));
+        }
+         return response;
+    }
 
-        if (isTokenExpiredStatus(httpResponse) || isTokenExpiredMessage(httpResponse)) {
+    private boolean isTokenExpired(HttpResponse httpResponse) {
+// isTokenExpiredMessage(httpResponse) is not necessary
+        if (isTokenExpiredStatus(httpResponse)) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
