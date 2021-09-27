@@ -7,7 +7,8 @@ public enum SpotifyErrorType implements ErrorTypeDefinition<SpotifyErrorType> {
 
     INVALID_INPUT(MuleErrors.ANY),
     INVALID_CONNECTION(MuleErrors.CONNECTIVITY),
-    TIMEOUT(MuleErrors.ANY);
+    TIMEOUT(MuleErrors.ANY),
+    BAD_REQUEST(MuleErrors.ANY);
 
     private ErrorTypeDefinition<? extends Enum<?>> parent;
 

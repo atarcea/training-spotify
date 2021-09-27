@@ -11,7 +11,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mule4-training-spotify-connector</artifactId>
-    <version>1.0.0-Training-004</version>
+    <version>1.0.0-Training-025</version>
     <packaging>mule-extension</packaging>
     <name>Spotify Connector -Mule4</name>
 

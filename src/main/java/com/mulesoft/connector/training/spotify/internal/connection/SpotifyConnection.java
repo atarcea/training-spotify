@@ -7,6 +7,7 @@ import com.mulesoft.connector.training.spotify.internal.error.SpotifyErrorType;
 import com.mulesoft.connector.training.spotify.internal.util.Constants;
 import org.apache.olingo.commons.api.format.ContentType;
 import org.mule.runtime.api.connection.ConnectionException;
+import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.core.api.util.StringUtils;
 import org.mule.runtime.extension.api.exception.ModuleException;
@@ -16,10 +17,13 @@ import org.mule.runtime.http.api.client.HttpClient;
 import org.mule.runtime.http.api.domain.message.request.HttpRequest;
 import org.mule.runtime.http.api.domain.message.request.HttpRequestBuilder;
 import org.mule.runtime.http.api.domain.message.response.HttpResponse;
+import org.mule.runtime.soap.api.exception.BadRequestException;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static org.mule.runtime.api.i18n.I18nMessageFactory.createStaticMessage;
 
 
 public class SpotifyConnection {
@@ -65,14 +69,28 @@ public class SpotifyConnection {
     }
 
     public HttpResponse handleResponse(HttpResponse response) {
-         if (isTokenExpired(response)){
-             throw new ModuleException(TOKEN_EXPIRED, SpotifyErrorType.INVALID_CONNECTION, new ConnectionException(TOKEN_EXPIRED));
+
+       final int statusCode = response.getStatusCode();
+
+        if (response.getStatusCode() >= 200 && statusCode < 300) {
+            return response;
         }
-         return response;
+
+        final String errorMessage = getErrorMessage(response);
+
+        switch (statusCode) {
+            case 400:
+                throw new ModuleException(errorMessage, SpotifyErrorType.BAD_REQUEST, new BadRequestException(errorMessage));
+            case 401:
+                throw new ModuleException(errorMessage, SpotifyErrorType.INVALID_CONNECTION, new ConnectionException(TOKEN_EXPIRED));
+            default:
+                throw new MuleRuntimeException(createStaticMessage(errorMessage, "GENERIC ERROR - Status Code: " + statusCode));
+
+        }
     }
 
     private boolean isTokenExpired(HttpResponse httpResponse) {
-// isTokenExpiredMessage(httpResponse) is not necessary
+
         if (isTokenExpiredStatus(httpResponse)) {
             return Boolean.TRUE;
         }
@@ -89,8 +107,10 @@ public class SpotifyConnection {
         return Boolean.FALSE;
     }
 
-    private boolean isTokenExpiredMessage(HttpResponse httpResponse) {
-        final Type resultType = new TypeToken<Map<String, Object>>() {}.getType();
+    private String getErrorMessage(HttpResponse httpResponse) {
+
+        final Type resultType = new TypeToken<Map<String, Object>>() {
+        }.getType();
 
         final Map<String, Object> httpResponseBody = gson.fromJson(IOUtils.toString(httpResponse.getEntity().getContent()), resultType);
 
@@ -101,11 +121,11 @@ public class SpotifyConnection {
 
             final LinkedTreeMap<String, String> errorObject = errorResponse.get(Constants.ERROR);
 
-            if (errorObject != null && errorObject.get(Constants.MESSAGE).equals(Constants.EXPIRED_ACCESS_TOKEN_MESSAGE)) {
-                return Boolean.TRUE;
+            if (errorObject != null && errorObject.containsKey(Constants.MESSAGE)) {
+                return errorObject.get(Constants.MESSAGE);
             }
         }
-        return Boolean.FALSE;
+        return null;
     }
 
     public HttpRequestBuilder getAuthorizedRequestBuilder() {

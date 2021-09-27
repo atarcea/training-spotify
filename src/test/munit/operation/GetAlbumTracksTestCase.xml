@@ -35,7 +35,7 @@
         </munit:execution>
         <munit:validation>
             <munit-tools:assert-that doc:name="Assert that" doc:id="b15f4bbe-9a58-486a-9a3f-512bd1077e3c"
-                                     is="#[MunitTools::withMediaType(&quot;application/json&quot;)]"
+                                     is="#[MunitTools::withMediaType(&quot;application/java&quot;)]"
                                      message="Invalid response type" expression="#[payload]"/>
         </munit:validation>
     </munit:test>
@@ -48,22 +48,19 @@
         </munit:execution>
         <munit:validation>
             <munit-tools:assert-that doc:name="Assert that" doc:id="b15f4bbe-9a58-486a-9a3f-512bd1077e3c"
-                                     is="#[MunitTools::equalTo(6)]" message="Invalid payload "
-                                     expression="#[sizeOf(payload.items)]"/>
+                                     is="#[MunitTools::equalTo(16)]" message="Invalid payload size "
+                                     expression="#[sizeOf(payload)]"/>
         </munit:validation>
     </munit:test>
 
-    <munit:test name="invalidAlbumId_ReturnsErrorPayload" doc:id="40becca8-5b57-4458-95cc-8a9b1d190c34"
-                description="Test error type response">
+    <munit:test name="invalidAlbumId_Throws_SPOTIFY_BAD_REQUEST" doc:id="40becca8-5b57-4458-95cc-8a9b1d190c34"
+                description="Test error type response"
+                expectedErrorType="SPOTIFY:BAD_REQUEST"
+                expectedException="org.mule.runtime.api.exception.MuleRuntimeException">
         <munit:execution>
             <flow-ref doc:name="Flow-ref to getAlbumTracks-invalidId-Flow" doc:id="815ca7af-c308-46fc-9cfe-3a613383f969"
                       name="getAlbumTracks-invalidId-Flow"/>
         </munit:execution>
-        <munit:validation>
-            <munit-tools:assert-that doc:name="Assert that" doc:id="b15f4bbe-9a58-486a-9a3f-512bd1077e3c"
-                                     is="#[MunitTools::notNullValue()]" message="Invalid payload "
-                                     expression="#[payload.error]"/>
-        </munit:validation>
     </munit:test>
 
 </mule>

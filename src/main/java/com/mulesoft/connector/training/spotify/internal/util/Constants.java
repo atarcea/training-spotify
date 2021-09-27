@@ -12,6 +12,10 @@ public class Constants {
     public static final String SLASH = "/";
     public static final String NULL_AUTHENTICATION_CONTEXT = "Null Authentication Context";
     public static final String EXPIRED_ACCESS_TOKEN_MESSAGE = "The access token expired";
+    public static final String ALBUM_URL = Constants.SPOTIFY_BASE_URI + Constants.SLASH + "albums";
+    public static final String TRACKS = "tracks";
+    public static final String EQUAL_SIGH = "=";
+    public static final String AND_SIGH = "&";
 
 
     private Constants() {
