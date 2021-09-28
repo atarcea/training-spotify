@@ -3,18 +3,18 @@ package com.mulesoft.connector.training.spotify.metadata.type;
 import java.util.Map;
 
 public class Artist {
-    private Map<String,String> externalUrl;
+    private ExternalUrl externalUrl;
     private String href;
-    private String id;
+    private Long id;
     private String name;
     private String type;
     private String uri;
 
-    public Map<String, String> getExternalUrl() {
+    public ExternalUrl getExternalUrl() {
         return externalUrl;
     }
 
-    public void setExternalUrl(Map<String, String> externalUrl) {
+    public void setExternalUrl(ExternalUrl externalUrl) {
         this.externalUrl = externalUrl;
     }
 
@@ -26,11 +26,11 @@ public class Artist {
         this.href = href;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

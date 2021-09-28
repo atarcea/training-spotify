@@ -9,7 +9,7 @@ public class Tracks {
     private Long disc_number;
     private Long duration_ms;
     private Boolean explicit;
-    private Map<String,String> externalUrls;
+    private ExternalUrl externalUrl;
     private String href;
     private Long id;
     private Boolean is_local;
@@ -60,12 +60,12 @@ public class Tracks {
     }
 
 
-    public Map<String, String> getExternalUrls() {
-        return externalUrls;
+    public ExternalUrl getExternalUrl() {
+        return externalUrl;
     }
 
-    public void setExternalUrls(Map<String, String> externalUrls) {
-        this.externalUrls = externalUrls;
+    public void setExternalUrl(ExternalUrl externalUrl) {
+        this.externalUrl = externalUrl;
     }
 
     public String getHref() {
